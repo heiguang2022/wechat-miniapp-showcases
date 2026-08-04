@@ -1,0 +1,36 @@
+<view class="app">
+  <view class="status"><text>9:41</text><text>● ● ▰</text></view>
+  <block wx:if="{{activeTab === 'today'}}">
+    <view class="topbar"><view><text class="greeting">{{greeting}}，</text><text class="name">慢慢变好的你</text></view><view class="avatar">🌱</view></view>
+    <view class="hero"><image src="/assets/hero.png" mode="aspectFill"/><view class="hero-copy"><text class="date">{{dateText}}</text><text class="hero-title">每一点微小坚持，都在悄悄发光</text><view class="progress-row"><view class="progress"><view class="progress-fill" style="width: {{percent}}%"></view></view><text>{{completed}} / {{habits.length}}</text></view></view></view>
+    <view class="week"><view wx:for="{{week}}" wx:key="date" class="day {{item.today ? 'today' : ''}}"><text>{{item.day}}</text><text class="day-num">{{item.date}}</text><view wx:if="{{item.today}}" class="day-dot"></view></view></view>
+    <view class="section-head"><view><text class="section-title">今日习惯</text><text class="sub">完成一件，就为今天点一盏灯</text></view><button bindtap="openAdd">＋</button></view>
+    <view class="habit-list"><view class="habit {{item.done ? 'done' : ''}}" wx:for="{{habits}}" wx:key="id"><view class="habit-icon" style="background: {{item.color}}">{{item.icon}}</view><view class="grow"><text class="habit-name">{{item.name}}</text><text class="habit-note">{{item.note}}</text><text class="streak">🔥 连续 {{item.streak}} 天</text></view><view class="check" data-id="{{item.id}}" bindtap="toggleHabit">{{item.done ? '✓' : ''}}</view></view></view>
+    <view wx:if="{{percent === 100}}" class="complete"><text>✨</text><view><text class="complete-title">今天全部完成啦</text><text class="complete-sub">你正在成为想成为的自己</text></view></view>
+  </block>
+
+  <block wx:elif="{{activeTab === 'stats'}}">
+    <view class="page-title">成长记录</view><text class="page-sub">看见每一次认真生活的痕迹</text>
+    <view class="streak-card"><view><text>本月坚持</text><text class="streak-num">18<text class="streak-unit"> 天</text></text><text class="positive">比上月多 4 天 ↑</text></view><view class="ring"><view><text class="ring-num">76%</text><text class="ring-label">完成率</text></view></view></view>
+    <view class="chart-card"><view class="card-head"><view><text class="card-title">本周完成趋势</text><text class="card-sub">共完成 26 次</text></view><text>近 7 天⌄</text></view><view class="chart"><view wx:for="{{bars}}" wx:key="*this" class="bar-col"><view class="bar-track"><view class="bar-fill" style="height: {{item}}%"></view></view><text>{{weekLabels[index]}}</text></view></view></view>
+    <view class="best-card"><text class="medal">🏅</text><view class="grow"><text class="best-label">最长连续纪录</text><text class="best-title">晨间喝水 · 12 天</text><text>保持得很棒，明天继续</text></view><text class="arrow">›</text></view>
+    <view class="section-label">习惯完成率</view><view class="rate-list"><view wx:for="{{habits}}" wx:key="id" class="rate"><view class="rate-icon" style="background: {{item.color}}">{{item.icon}}</view><view class="grow"><view class="rate-name"><text>{{item.name}}</text><text class="rate-value">{{item.done ? '92' : '68'}}%</text></view><view class="rate-track"><view class="rate-fill" style="width: {{item.done ? '92' : '68'}}%; background: {{item.color}}"></view></view></view></view></view>
+  </block>
+
+  <block wx:else>
+    <view class="profile-head"><view class="big-avatar">🌱</view><text class="profile-name">{{profileName}}</text><text class="profile-sub">加入微光的第 128 天</text></view>
+    <view class="profile-stats"><view><text class="stat-num">46</text><text>累计打卡</text></view><view class="divider"></view><view><text class="stat-num">12</text><text>最长连续</text></view><view class="divider"></view><view><text class="stat-num">{{habits.length}}</text><text>进行中</text></view></view>
+    <view class="manage-head"><text>我的习惯</text><button bindtap="openAdd">＋ 新建</button></view>
+    <view class="manage-list"><view wx:for="{{habits}}" wx:key="id" class="manage"><view class="small-icon" style="background: {{item.color}}">{{item.icon}}</view><view class="grow"><text class="manage-name">{{item.name}}</text><text>每天 · 连续 {{item.streak}} 天</text></view><text data-id="{{item.id}}" bindtap="deleteHabit" class="delete">删除</text></view></view>
+    <view class="settings"><view><text>提醒设置</text><text>已开启  〉</text></view><view><text>数据与隐私</text><text>〉</text></view><view bindtap="resetData"><text>恢复示例数据</text><text>↻</text></view></view>
+    <text class="version">微光习惯 · 让改变轻一点</text>
+  </block>
+
+  <view class="safe"></view><view class="tabbar"><view data-tab="today" bindtap="switchTab" class="tab {{activeTab === 'today' ? 'on' : ''}}"><text>☀</text><text class="tab-label">今日</text></view><view data-tab="stats" bindtap="switchTab" class="tab {{activeTab === 'stats' ? 'on' : ''}}"><text>⌁</text><text class="tab-label">统计</text></view><view data-tab="profile" bindtap="switchTab" class="tab {{activeTab === 'profile' ? 'on' : ''}}"><text>◉</text><text class="tab-label">我的</text></view></view>
+
+  <view wx:if="{{showAdd}}" class="overlay" bindtap="closeAdd"><view class="sheet" catchtap="block"><view class="handle"></view><view class="sheet-head"><text>创建新习惯</text><text bindtap="closeAdd">×</text></view><text class="input-label">我想养成</text><input placeholder="例如：每天冥想 10 分钟" maxlength="16" value="{{newHabitName}}" bindinput="onNameInput"/><text class="input-label">选择一个图标</text><view class="presets"><view wx:for="{{presets}}" wx:key="icon" data-index="{{index}}" bindtap="choosePreset" class="preset {{selectedPreset === index ? 'selected' : ''}}" style="background: {{item.color}}">{{item.icon}}</view></view><view class="tip"><text>☀</text><text>从容易完成的小目标开始，更容易形成稳定的习惯。</text></view><button class="create" bindtap="addHabit">开始这项习惯</button></view></view>
+</view>
+
+
+
+

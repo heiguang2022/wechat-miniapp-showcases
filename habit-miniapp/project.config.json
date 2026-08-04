@@ -1,0 +1,8 @@
+{
+  "appid": "wx0dc057ec2742fca1",
+  "projectname": "habit-miniapp",
+  "description": "微光习惯打卡小程序",
+  "miniprogramRoot": "./",
+  "compileType": "miniprogram",
+  "setting": { "es6": true, "enhance": true, "postcss": true, "minified": true }
+}

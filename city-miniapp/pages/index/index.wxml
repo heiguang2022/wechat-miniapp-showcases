@@ -1,0 +1,29 @@
+<view class="app">
+  <view class="status"><text>9:41</text><text>● ● ▰</text></view>
+  <block wx:if="{{activeTab === 'explore'}}">
+    <view class="topbar"><view><text class="location">上海⌄</text><text class="hello">今天，去哪里逛逛？</text></view><view class="round">⌕</view></view>
+    <view class="hero"><image src="/assets/hero.png" mode="aspectFill"/><view class="shade"></view><view class="hero-copy"><text class="label">本周策划 · 04</text><text class="hero-title">城市的夜晚，正在发生</text><view class="hero-link">探索本周精选 <text>→</text></view></view><view class="dots"><view class="dot"></view><view class="dot"></view><view class="dot"></view></view></view>
+    <scroll-view class="filter-scroll" scroll-x><view class="filters"><view wx:for="{{filters}}" wx:key="*this" data-filter="{{item}}" bindtap="selectFilter" class="filter {{activeFilter === item ? 'active' : ''}}">{{item}}</view></view></scroll-view>
+    <view class="section-head"><view><text class="section-title">附近正在发生</text><text class="sub">为你挑选城市里的好去处</text></view><text class="map">⌖ 地图</text></view>
+    <view class="event-list"><view class="event" wx:for="{{events}}" wx:key="id" data-id="{{item.id}}" bindtap="openEvent"><view class="event-art" style="background: {{item.color}}"><text class="art-icon">{{item.icon}}</text><text class="type">{{item.type}}</text><view class="date"><text class="date-num">{{item.day}}</text><text class="date-month">{{item.month}}</text></view></view><view class="event-body"><view class="event-row"><text class="event-title">{{item.title}}</text><text class="heart {{item.liked ? 'liked' : ''}}" data-id="{{item.id}}" catchtap="toggleLike">{{item.liked ? '♥' : '♡'}}</text></view><text class="place">⌖ {{item.place}}</text><text class="time">◷ {{item.date}}</text><view class="event-foot"><view><text wx:for="{{item.tags}}" wx:key="*this" class="tag">{{item}}</text></view><text class="price">{{item.price ? '¥' + item.price : '免费'}}</text></view></view></view></view>
+  </block>
+
+  <block wx:elif="{{activeTab === 'saved'}}">
+    <view class="page-title">我的收藏</view><text class="page-sub">把心动的周末先收好</text>
+    <view wx:if="{{favorites.length}}" class="saved-grid"><view class="saved" wx:for="{{favorites}}" wx:key="id" data-id="{{item.id}}" bindtap="openEvent"><view class="saved-art" style="background: {{item.color}}"><text>{{item.icon}}</text><text class="saved-date">{{item.day}} {{item.month}}</text></view><text class="saved-type">{{item.type}} · {{item.place}}</text><text class="saved-title">{{item.title}}</text><text class="saved-heart" data-id="{{item.id}}" catchtap="toggleLike">♥</text></view></view>
+    <view wx:else class="empty"><text>♡</text><text class="empty-title">还没有收藏</text><text class="empty-sub">遇到心动活动，点一下爱心就好</text><button data-tab="explore" bindtap="switchTab">去发现</button></view>
+  </block>
+
+  <block wx:else>
+    <view class="page-title">我的票夹</view><text class="page-sub">下一次城市体验，从这里出发</text>
+    <view wx:if="{{tickets.length}}" class="ticket-list"><view class="ticket" wx:for="{{tickets}}" wx:key="id"><view class="ticket-main"><view class="ticket-date"><text class="ticket-day">{{item.day}}</text><text class="ticket-month">{{item.month}}</text></view><view class="grow"><text class="ticket-type">{{item.type}} · 已报名</text><text class="ticket-title">{{item.title}}</text><text class="place">{{item.place}}</text></view></view><view class="tear"></view><view class="ticket-code"><view class="barcode">|||| ||| || |||| |</view><text>{{item.code}}</text><text data-id="{{item.id}}" bindtap="removeTicket" class="cancel">取消</text></view></view></view>
+    <view wx:else class="empty"><text>▣</text><text class="empty-title">票夹还是空的</text><text class="empty-sub">报名的活动会出现在这里</text><button data-tab="explore" bindtap="switchTab">看看活动</button></view>
+  </block>
+
+  <view class="safe"></view><view class="tabbar"><view data-tab="explore" bindtap="switchTab" class="tab {{activeTab === 'explore' ? 'on' : ''}}"><text>⌂</text><text class="tab-label">发现</text></view><view data-tab="saved" bindtap="switchTab" class="tab {{activeTab === 'saved' ? 'on' : ''}}"><text>♡</text><text class="tab-label">收藏</text></view><view data-tab="tickets" bindtap="switchTab" class="tab {{activeTab === 'tickets' ? 'on' : ''}}"><text>▣</text><text class="tab-label">票夹</text><text wx:if="{{tickets.length}}" class="tab-badge">{{tickets.length}}</text></view></view>
+
+  <view wx:if="{{showDetail}}" class="overlay" bindtap="closeDetail"><view class="sheet" catchtap="block"><view class="sheet-visual" style="background: {{selected.color}}"><text class="sheet-icon">{{selected.icon}}</text><view class="sheet-date"><text class="sheet-day">{{selected.day}}</text><text class="sheet-month">{{selected.month}}</text></view><text class="close" bindtap="closeDetail">×</text></view><view class="sheet-content"><view class="event-row"><text class="detail-type">{{selected.type}} · 城市精选</text><text class="heart {{selected.liked ? 'liked' : ''}}" data-id="{{selected.id}}" bindtap="toggleLike">{{selected.liked ? '♥' : '♡'}}</text></view><text class="detail-title">{{selected.title}}</text><view class="detail-info"><text>◷ {{selected.date}}</text><text>⌖ {{selected.place}}</text></view><text class="intro">和城市里有趣的人相遇，在熟悉的街角发现新的灵感。活动名额有限，建议提前预约。</text><button class="book" bindtap="book">{{selected.price ? '立即报名 · ¥' + selected.price : '免费预约'}}</button></view></view></view>
+</view>
+
+
+

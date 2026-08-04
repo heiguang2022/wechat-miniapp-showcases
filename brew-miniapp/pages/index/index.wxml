@@ -1,0 +1,46 @@
+<view class="app">
+  <view class="status"><text>9:41</text><text>● ● ▰</text></view>
+
+  <block wx:if="{{activeTab === 'menu'}}">
+    <view class="topbar"><view><text class="eyebrow">GOOD MORNING</text><view class="brand">一刻咖啡 <text>●</text></view></view><view class="avatar">YK</view></view>
+    <view class="hero">
+      <image src="/assets/hero.png" mode="aspectFill" />
+      <view class="hero-copy"><text class="hero-kicker">SEASONAL SPECIAL</text><text class="hero-title">夏日橙意，清醒刚刚好</text><text class="hero-sub">新品第二杯半价 · 至 8 月 18 日</text></view>
+    </view>
+    <view class="pickup"><view class="pin">⌖</view><view class="grow"><text class="label">取餐门店</text><text class="value">一刻咖啡 · 梧桐里店</text></view><text class="distance">距你 280m  〉</text></view>
+    <scroll-view class="categories" scroll-x><view class="category-row"><view wx:for="{{categories}}" wx:key="*this" data-name="{{item}}" bindtap="selectCategory" class="category {{activeCategory === item ? 'active' : ''}}">{{item}}</view></view></scroll-view>
+    <view class="section-head"><text>{{activeCategory}}</text><text class="muted">{{products.length}} 款</text></view>
+    <view class="product-list">
+      <view class="product" wx:for="{{products}}" wx:key="id">
+        <view class="product-art" style="background: {{item.tone}}"><text>{{item.icon}}</text></view>
+        <view class="product-info"><view><text wx:if="{{item.badge}}" class="badge">{{item.badge}}</text><text class="product-name">{{item.name}}</text></view><text class="desc">{{item.desc}}</text><text class="price">¥{{item.price}}</text></view>
+        <button class="add" data-id="{{item.id}}" bindtap="openSku">＋</button>
+      </view>
+    </view>
+  </block>
+
+  <block wx:elif="{{activeTab === 'cart'}}">
+    <view class="page-title"><text>购物袋</text><text class="muted">{{cartCount}} 件</text></view>
+    <view wx:if="{{!cart.length}}" class="empty"><text class="empty-icon">☕</text><text class="empty-title">还没有选择咖啡</text><text class="desc">今天想喝点什么？</text><button bindtap="reorder">去点单</button></view>
+    <view wx:else class="cart-wrap">
+      <view class="store-card"><text>⌖ 梧桐里店</text><text class="green">营业中 · 预计 12 分钟</text></view>
+      <view class="cart-item" wx:for="{{cart}}" wx:key="key"><view class="mini-art" style="background: {{item.tone}}">{{item.icon}}</view><view class="grow"><text class="product-name">{{item.name}}</text><text class="desc">{{item.temperature}} · {{item.sugar}}糖</text><text class="price">¥{{item.price}}</text></view><view class="stepper"><text data-key="{{item.key}}" data-delta="-1" bindtap="changeQty">−</text><text>{{item.qty}}</text><text data-key="{{item.key}}" data-delta="1" bindtap="changeQty">＋</text></view></view>
+      <view class="summary"><view><text>商品小计</text><text>¥{{cartTotal}}</text></view><view><text>打包费</text><text>¥0</text></view><view class="total"><text>合计</text><text>¥{{cartTotal}}</text></view></view>
+      <button class="checkout" bindtap="checkout">确认下单 · ¥{{cartTotal}}</button>
+    </view>
+  </block>
+
+  <block wx:else>
+    <view class="page-title"><text>我的订单</text></view>
+    <view wx:if="{{order}}" class="order-card"><view class="order-top"><view><text class="green">● {{order.status}}</text><text class="order-time">{{order.time}}</text></view><text class="cup">☕</text></view><view class="progress"><view class="dot"></view><view class="dot"></view><view class="dot off"></view></view><view class="progress-label"><text>已接单</text><text>制作中</text><text>待取餐</text></view><view class="line"></view><view class="order-row"><text>订单号 {{order.no}}</text><text>{{order.count}} 件 · ¥{{order.total}}</text></view><view class="order-actions"><button bindtap="clearOrder">删除记录</button><button class="dark" bindtap="reorder">再来一单</button></view></view>
+    <view wx:else class="empty"><text class="empty-icon">🧾</text><text class="empty-title">暂无进行中的订单</text><button bindtap="reorder">去点一杯</button></view>
+  </block>
+
+  <view class="safe-space"></view>
+  <view class="tabbar"><view data-tab="menu" bindtap="switchTab" class="tab {{activeTab === 'menu' ? 'selected' : ''}}"><text>⌂</text><text>点单</text></view><view data-tab="cart" bindtap="switchTab" class="tab {{activeTab === 'cart' ? 'selected' : ''}}"><view class="tab-icon">▢<text wx:if="{{cartCount}}" class="badge-count">{{cartCount}}</text></view><text>购物袋</text></view><view data-tab="orders" bindtap="switchTab" class="tab {{activeTab === 'orders' ? 'selected' : ''}}"><text>◷</text><text>订单</text></view></view>
+
+  <view wx:if="{{showSku}}" class="overlay" bindtap="closeSku"><view class="sheet" catchtap="block"><view class="handle"></view><view class="sheet-head"><view class="sheet-art" style="background: {{selected.tone}}">{{selected.icon}}</view><view class="grow"><text class="sheet-title">{{selected.name}}</text><text class="desc">{{selected.desc}}</text><text class="sheet-price">¥{{selected.price}}</text></view><text class="close" bindtap="closeSku">×</text></view><text class="option-title">温度</text><view class="options"><view wx:for="{{temperatureOptions}}" wx:key="*this" data-type="temperature" data-value="{{item}}" bindtap="chooseOption" class="option {{temperature === item ? 'chosen' : ''}}">{{item}}</view></view><text class="option-title">糖度</text><view class="options"><view wx:for="{{sugarOptions}}" wx:key="*this" data-type="sugar" data-value="{{item}}" bindtap="chooseOption" class="option {{sugar === item ? 'chosen' : ''}}">{{item}}</view></view><button class="checkout" bindtap="addToCart">加入购物袋 · ¥{{selected.price}}</button></view></view>
+</view>
+
+
+

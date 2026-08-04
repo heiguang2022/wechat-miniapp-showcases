@@ -1,0 +1,8 @@
+{
+  "appid": "wx0dc057ec2742fca1",
+  "projectname": "brew-miniapp",
+  "description": "一刻咖啡精品点单小程序",
+  "miniprogramRoot": "./",
+  "compileType": "miniprogram",
+  "setting": { "es6": true, "enhance": true, "postcss": true, "minified": true }
+}

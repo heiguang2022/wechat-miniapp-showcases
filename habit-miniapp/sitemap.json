@@ -1,0 +1,1 @@
+{ "desc": "微光习惯页面索引", "rules": [{ "action": "allow", "page": "*" }] }

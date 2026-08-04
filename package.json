@@ -1,0 +1,9 @@
+{
+  "name": "wechat-miniapp-showcases",
+  "version": "1.0.0",
+  "private": true,
+  "description": "三个原生微信小程序样例及其零依赖测试套件",
+  "scripts": {
+    "test": "node tests/run-tests.js"
+  }
+}
