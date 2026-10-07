@@ -1,0 +1,1 @@
+.profile{text-align:center;padding:50rpx}.avatar{width:120rpx;height:120rpx;border-radius:50%;background:#285b49;color:white;display:grid;place-items:center;margin:auto;font-size:40rpx;font-family:Georgia,serif}.name{display:block;font-weight:700;font-size:36rpx;margin:22rpx}.item{padding-top:24rpx;margin-top:24rpx;border-top:1rpx solid #eee8df}

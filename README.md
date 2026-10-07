@@ -1,4 +1,16 @@
-# 微信小程序精品样例
+# 微信小程序精品样例与一刻咖啡多商户 MVP
+
+仓库在保留三个原生微信小程序样例的基础上，新增了可部署的“一刻咖啡”多商户餐饮 MVP：
+
+- `apps/miniapp`：顾客端原生微信小程序。
+- `apps/api`：Java 17、Spring Boot、MyBatis-Plus、MySQL API。
+- `apps/admin`：Vue 3 + TypeScript + Element Plus 运营后台。
+- `deploy`：MySQL、API、后台和 Nginx 的 Docker Compose 部署。
+- `docs`：接口、部署、演示、测试和验收文档。
+
+完整本地演示请从 [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) 开始。旧版离线样例仍保留在原目录中，便于回归与素材复用。
+
+## 原始离线样例
 
 三个零依赖、可直接运行的原生微信小程序。每个目录都是独立项目，使用测试 AppID 导入微信开发者工具即可。
 

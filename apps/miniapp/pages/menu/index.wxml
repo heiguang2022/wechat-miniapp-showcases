@@ -1,0 +1,12 @@
+<view class="page">
+  <view class="row between"><view><text class="eyebrow">GOOD MORNING</text><view class="brand">一刻咖啡 <text class="dot">●</text></view></view><view class="avatar">YK</view></view>
+  <view class="hero"><image src="/assets/hero.png" mode="aspectFill"/><view class="hero-copy"><text class="eyebrow">SEASONAL SPECIAL</text><text class="hero-title">夏日橙意，清醒刚刚好</text><text>新鲜现制 · 到店自取</text></view></view>
+  <view wx:if="{{loading}}" class="empty"><text>菜单加载中…</text></view><view wx:elif="{{error}}" class="error">{{error}}<button size="mini" bindtap="load">重试</button></view>
+  <block wx:else>
+    <picker range="{{stores}}" range-key="name" bindchange="chooseStore"><view class="card row between"><view><text class="muted">取餐门店</text><text class="store">{{store.name}}</text></view><text>{{store.status === 'OPEN' ? '营业中' : '休息中'}} 〉</text></view></picker>
+    <scroll-view scroll-x class="categories"><view class="category-row"><view wx:for="{{categories}}" wx:key="id" data-id="{{item.id}}" bindtap="chooseCategory" class="category {{activeCategory===item.id?'active':''}}">{{item.name}}</view></view></scroll-view>
+    <view class="product card" wx:for="{{visibleProducts}}" wx:key="id"><view class="art">☕</view><view class="grow"><text class="product-name">{{item.name}}</text><text class="desc">{{item.description}}</text><text class="price">¥{{item.priceText}}</text></view><button class="add" data-id="{{item.id}}" bindtap="openSku">＋</button></view>
+  </block>
+  <view wx:if="{{cartCount}}" class="cart-float" bindtap="goCart"><text>购物袋</text><text>{{cartCount}} 件 〉</text></view>
+</view>
+<view wx:if="{{showSku}}" class="overlay" bindtap="closeSku"><view class="sheet" catchtap="block"><view class="row between"><view><text class="sheet-title">{{selected.name}}</text><text class="desc">{{selected.description}}</text></view><text bindtap="closeSku">×</text></view><block wx:for="{{selected.specGroups}}" wx:key="id" wx:for-item="group"><text class="option-title">{{group.name}}</text><view class="options"><view wx:for="{{group.options}}" wx:key="id" data-group="{{group.id}}" data-option="{{item.id}}" bindtap="chooseOption" class="option {{selections[group.id]===item.id?'chosen':''}}">{{item.name}}<text wx:if="{{item.priceDelta}}"> +¥{{item.priceDelta/100}}</text></view></view></block><button class="primary" bindtap="addToCart">加入购物袋 · ¥{{unitPrice/100}}</button></view></view>

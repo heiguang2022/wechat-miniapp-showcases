@@ -1,2 +1,11 @@
 **/project.private.config.json
 
+# Build outputs and local runtime data
+**/target/
+**/node_modules/
+**/dist/
+.env
+uploads/
+data/
+*.log
+

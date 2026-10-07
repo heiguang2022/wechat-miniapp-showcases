@@ -1,0 +1,8 @@
+<view class="page"><view class="row between"><text class="title">购物袋</text><text class="muted">{{count}} 件</text></view>
+  <view wx:if="{{!cart.items.length}}" class="empty"><text class="empty-icon">☕</text><text>还没有选择咖啡</text><button class="primary" bindtap="menu">去点单</button></view>
+  <block wx:else><view class="card"><text class="muted">取餐门店</text><text class="store">{{cart.storeName}}</text></view>
+    <view class="card item" wx:for="{{cart.items}}" wx:key="key"><view class="cup">☕</view><view class="grow"><text class="name">{{item.name}}</text><text class="muted option-text">{{item.optionText}}</text><text class="price">¥{{item.unitPrice/100}}</text></view><view class="step"><text data-key="{{item.key}}" data-delta="-1" bindtap="change">−</text><text>{{item.quantity}}</text><text data-key="{{item.key}}" data-delta="1" bindtap="change">＋</text></view></view>
+    <view class="card"><view class="row between"><text>商品小计</text><text>¥{{amountText}}</text></view><view class="row between total"><text>合计</text><text class="price">¥{{amountText}}</text></view></view>
+    <button class="primary" bindtap="confirm">确认订单 · ¥{{amountText}}</button>
+  </block>
+</view>

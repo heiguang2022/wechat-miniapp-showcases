@@ -1,0 +1,36 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-yike_coffee}
+      MYSQL_USER: ${MYSQL_USER:-yike}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-change-me}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change-root-password}
+      TZ: Asia/Shanghai
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_0900_ai_ci"]
+    volumes: ["mysql_data:/var/lib/mysql"]
+    healthcheck: { test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-change-root-password}"], interval: 10s, timeout: 5s, retries: 15 }
+  api:
+    build: ../apps/api
+    environment:
+      SPRING_PROFILES_ACTIVE: demo
+      DB_URL: jdbc:mysql://mysql:3306/${MYSQL_DATABASE:-yike_coffee}?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false
+      DB_USERNAME: ${MYSQL_USER:-yike}
+      DB_PASSWORD: ${MYSQL_PASSWORD:-change-me}
+      JWT_SECRET: ${JWT_SECRET:-local-development-secret-change-this-now}
+      UPLOAD_DIR: /data/uploads
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL:-http://localhost}
+    volumes: ["uploads:/data/uploads"]
+    depends_on: { mysql: { condition: service_healthy } }
+    healthcheck: { test: ["CMD-SHELL", "wget -qO- http://localhost:8080/actuator/health | grep UP"], interval: 10s, timeout: 5s, retries: 15 }
+  admin:
+    build: ../apps/admin
+    healthcheck: { test: ["CMD-SHELL", "wget -qO- http://127.0.0.1/health"], interval: 10s, timeout: 5s, retries: 10 }
+  nginx:
+    image: nginx:1.27-alpine
+    ports: ["80:80"]
+    volumes: ["./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro"]
+    depends_on: { api: { condition: service_healthy }, admin: { condition: service_healthy } }
+volumes:
+  mysql_data:
+  uploads:

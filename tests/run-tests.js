@@ -213,4 +213,47 @@ test('habit tracker supports check-in, creation, deletion, reset and persistence
   assert.equal(reloaded.data.habits.length, originalCount)
 })
 
+test('multi-merchant MVP contains deployable API, admin and split miniapp flows', () => {
+  const required = [
+    'apps/api/pom.xml',
+    'apps/api/src/main/resources/db/migration/V1__schema.sql',
+    'apps/api/src/main/resources/db/demo/R__demo_data.sql',
+    'apps/admin/package.json',
+    'deploy/docker-compose.yml',
+    'apps/miniapp/pages/login/index.js',
+    'apps/miniapp/pages/menu/index.js',
+    'apps/miniapp/pages/cart/index.js',
+    'apps/miniapp/pages/confirm/index.js',
+    'apps/miniapp/pages/orders/index.js',
+    'apps/miniapp/pages/order-detail/index.js'
+  ]
+  required.forEach(file => assert.ok(fs.existsSync(path.join(ROOT, file)), `${file} must exist`))
+  const app = JSON.parse(readText(path.join(ROOT, 'apps/miniapp/app.json')))
+  assert.ok(app.pages.includes('pages/confirm/index'))
+  assert.ok(app.pages.includes('pages/order-detail/index'))
+  const api = readText(path.join(ROOT, 'apps/miniapp/utils/api.js'))
+  assert.match(api, /Authorization/)
+  const order = readText(path.join(ROOT, 'apps/miniapp/pages/confirm/index.js'))
+  assert.match(order, /X-Idempotency-Key/)
+
+  const allowed = new Set([...ALLOWED_WXML_TAGS, 'picker'])
+  for (const page of app.pages) {
+    const base = path.join(ROOT, 'apps/miniapp', page)
+    for (const extension of ['js', 'json', 'wxml', 'wxss']) assert.ok(fs.existsSync(`${base}.${extension}`), `${page}.${extension} must exist`)
+    const wxml = readText(`${base}.wxml`)
+    const js = readText(`${base}.js`)
+    const stack = []
+    for (const match of wxml.matchAll(/<\s*(\/)?\s*([a-z][\w-]*)([^>]*)>/g)) {
+      const [, closing, tag, attributes] = match
+      assert.ok(allowed.has(tag), `${page} contains unsupported <${tag}>`)
+      if (closing) assert.equal(stack.pop(), tag, `${page} has mismatched </${tag}>`)
+      else if (!attributes.trimEnd().endsWith('/')) stack.push(tag)
+    }
+    assert.deepEqual(stack, [], `${page} has unclosed WXML tags`)
+    for (const match of wxml.matchAll(/(?:bindtap|catchtap|bindchange)="([\w]+)"/g)) {
+      assert.match(js, new RegExp(`\\b${match[1]}\\s*\\(`), `${page} is missing handler ${match[1]}`)
+    }
+  }
+})
+
 console.log(`\n${passed} test groups passed.`)

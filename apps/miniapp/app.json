@@ -1,0 +1,17 @@
+{
+  "pages": [
+    "pages/menu/index", "pages/cart/index", "pages/orders/index", "pages/profile/index",
+    "pages/login/index", "pages/confirm/index", "pages/order-detail/index"
+  ],
+  "window": { "navigationBarTitleText": "一刻咖啡", "navigationBarBackgroundColor": "#F6F2EB", "navigationBarTextStyle": "black", "backgroundColor": "#F6F2EB" },
+  "tabBar": {
+    "color": "#8A8277", "selectedColor": "#285B49", "backgroundColor": "#FFFCF7", "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/menu/index", "text": "点单" },
+      { "pagePath": "pages/cart/index", "text": "购物袋" },
+      { "pagePath": "pages/orders/index", "text": "订单" },
+      { "pagePath": "pages/profile/index", "text": "我的" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json"
+}

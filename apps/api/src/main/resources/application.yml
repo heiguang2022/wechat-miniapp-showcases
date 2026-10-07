@@ -1,0 +1,42 @@
+server:
+  port: ${SERVER_PORT:8080}
+  forward-headers-strategy: framework
+spring:
+  application:
+    name: yike-coffee-api
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/yike_coffee?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&useSSL=false}
+    username: ${DB_USERNAME:yike}
+    password: ${DB_PASSWORD:change-me}
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+  jackson:
+    default-property-inclusion: non_null
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+  global-config:
+    banner: false
+app:
+  auth:
+    dev-enabled: ${DEV_AUTH_ENABLED:true}
+    jwt-secret: ${JWT_SECRET:local-development-secret-change-this-now}
+    access-minutes: 120
+    refresh-days: 7
+  upload-dir: ${UPLOAD_DIR:./uploads}
+  public-base-url: ${PUBLIC_BASE_URL:http://localhost:8080}
+springdoc:
+  api-docs:
+    path: /api/v3/api-docs
+  swagger-ui:
+    path: /api/swagger-ui.html
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

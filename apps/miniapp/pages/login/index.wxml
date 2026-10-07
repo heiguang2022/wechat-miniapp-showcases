@@ -1,0 +1,8 @@
+<view class="login">
+  <view class="coffee-mark">YK</view><text class="brand">一刻咖啡 <text class="dot">●</text></text>
+  <text class="slogan">一杯咖啡，一刻松弛</text>
+  <view wx:if="{{error}}" class="error">{{error}}</view>
+  <button class="primary" loading="{{loading}}" data-email="customer@example.test" bindtap="login">顾客演示登录</button>
+  <button class="ghost" loading="{{loading}}" data-email="customer2@example.test" bindtap="login">第二位顾客</button>
+  <text class="tip">当前为可替换的开发登录，正式环境不会开放此入口</text>
+</view>
